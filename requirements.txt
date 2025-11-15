@@ -1,0 +1,19 @@
+# requirements.txt
+# Core framework
+fastapi
+uvicorn
+
+# Image processing
+Pillow
+
+# Async HTTP
+aiohttp
+
+# OpenAI SDK
+openai>=1.0.0
+
+# Google Gemini SDK (optional but supported)
+google-genai
+
+# Utilities
+python-multipart
