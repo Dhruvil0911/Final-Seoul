@@ -14,7 +14,7 @@ import os
 # -----------------------------
 # API Keys (Load from ENV)
 # -----------------------------
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "##APIkey##")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "sk-1234567890abcdef1234567890abcdef12345678")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "##APIkey##")
 
 # -----------------------------

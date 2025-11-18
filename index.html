@@ -4,73 +4,364 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Seasoul Skin Analyzer</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
   body {
     font-family: "Inter", sans-serif;
     background: #f8f9fb;
     text-align: center;
-    padding: 50px 10px;
+    padding: 40px 10px;
+    margin: 0;
+    color: #333;
   }
+
   h2 {
     font-size: 2em;
     margin-bottom: 20px;
+    color: #333;
   }
+
+  /* --- Upload Section --- */
+  .upload-section {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    max-width: 600px;
+    margin: 0 auto 40px auto;
+  }
+
   input[type="file"] {
     margin-bottom: 20px;
   }
+
   #preview {
-    width: 200px;
-    height: auto;
-    border-radius: 12px;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
     margin-top: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 4px solid #e53935;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   }
+
   .btn {
-    background-color: #0078ff;
+    background-color: #e53935; /* Red brand color */
     color: white;
     font-size: 16px;
     border: none;
-    padding: 10px 22px;
-    border-radius: 8px;
+    padding: 12px 30px;
+    border-radius: 30px;
     cursor: pointer;
+    font-weight: 600;
     transition: all 0.3s ease;
     margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(229, 57, 53, 0.3);
   }
+
   .btn:hover {
-    background-color: #005fd1;
+    background-color: #d32f2f;
+    transform: translateY(-2px);
   }
-  pre {
-    background: white;
-    text-align: left;
-    width: 80%;
-    margin: 30px auto;
-    padding: 15px 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    overflow-x: auto;
-    font-family: monospace;
-    white-space: pre-wrap;
-  }
+
   .loading {
     font-style: italic;
     color: gray;
+    margin-top: 20px;
   }
+
+  /* --- Report UI --- */
+  #resultContainer {
+    display: none; /* Hidden by default */
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* Section Headers */
+  .section-tag {
+    background-color: #e53935;
+    color: white;
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 8px 8px 0 0;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: -2px; /* Overlap border */
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Red Container */
+  .red-card-container {
+    background-color: #e53935;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 25px rgba(229, 57, 53, 0.2);
+  }
+
+  /* Lifestyle Header Grid */
+  .lifestyle-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  /* White Cards */
+  .white-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+  }
+
+  .white-card .icon {
+    font-size: 24px;
+    color: #e53935;
+    margin-bottom: 8px;
+  }
+
+  .white-card .value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #e53935;
+  }
+
+  .white-card .label {
+    font-size: 14px;
+    color: #666;
+    margin-top: 4px;
+  }
+
+  /* Skincare Main Section */
+  .white-title {
+    color: white;
+    font-size: 18px;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  /* Top 3 Concerns Grid */
+  .top3-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .concern-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    padding-bottom: 15px;
+  }
+
+  .concern-img {
+    width: 50%;
+    height: 200px;
+    object-fit: cover;
+    background: #eee;
+    margin-top: 5px;
+  }
+
+  .concern-details {
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px; /* Pull up over image */
+    position: relative;
+  }
+
+  .score-circle-sm {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    border: 3px solid #e53935;
+    color: #e53935;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+
+  .concern-text {
+    text-align: left;
+    margin-top: 20px; /* Push down */
+  }
+  
+  .concern-name {
+    color: #e53935;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: capitalize;
+  }
+
+  .concern-severity {
+    font-size: 13px;
+    color: #333;
+    font-weight: 500;
+  }
+
+  /* Metrics Grid (5 items per row) */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+  }
+
+  /* Responsive adjustment for grid */
+  @media (max-width: 768px) {
+    .metrics-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .metric-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .metric-severity {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 8px;
+  }
+
+  .metric-label {
+    font-size: 13px;
+    color: #e53935;
+    font-weight: 600;
+    margin-top: 8px;
+    text-transform: capitalize;
+  }
+
+  /* Circular Progress Bar CSS */
+  .progress-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: conic-gradient(#e53935 0% 0%, #eee 0% 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .progress-circle::before {
+    content: "";
+    width: 48px;
+    height: 48px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+  }
+
+  .progress-value {
+    position: relative;
+    font-size: 16px;
+    font-weight: 700;
+    color: #555;
+  }
+
+  /* Color Modifiers for Severity */
+  .color-high { color: #d32f2f; }
+  .bg-high { background-color: #d32f2f; }
+  
+  .color-mod { color: #f57c00; }
+  .color-low { color: #388e3c; }
+
 </style>
 </head>
 <body>
 
 <h2>Seasoul Skin Analyzer</h2>
 
-<input type="file" id="fileInput" accept="image/*">
-<br>
-<img id="preview" hidden>
-<br>
-<button class="btn" onclick="uploadImage()">Analyze</button>
+<div class="upload-section">
+  <input type="file" id="fileInput" accept="image/*">
+  <br>
+  <img id="preview" hidden>
+  <br>
+  <button class="btn" onclick="uploadImage()">Analyze Skin</button>
+  <div id="loadingText" class="loading" hidden>Analyzing image... please wait ⏳</div>
+  <div id="errorText" style="color: red; margin-top:10px;"></div>
+</div>
 
-<pre id="output">Waiting for result...</pre>
+<div id="resultContainer">
+  
+  <div class="section-tag">LifeStyle AI</div>
+  <div class="red-card-container">
+    <div class="lifestyle-grid">
+      <div class="white-card">
+        <i class="fas fa-user icon"></i>
+        <div class="value" id="res-age">--</div>
+        <div class="label">Age</div>
+      </div>
+      <div class="white-card">
+        <i class="fas fa-barcode icon"></i>
+        <div class="value" id="res-skin-type">--</div>
+        <div class="label">Skin Type</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-tag">Skincare AI</div>
+  <div class="red-card-container">
+    <div class="white-title">Your Top 3 Skin Concerns</div>
+    
+    <div class="top3-grid" id="top3-container">
+      </div>
+
+    <div class="metrics-grid" id="metrics-container">
+      </div>
+
+  </div>
+</div>
 
 <script>
-const backendURL = "http://127.0.0.1:8000/analyze-skin"; // change this to your backend
+const backendURL = "http://127.0.0.1:8000/analyze-skin"; // Change to your backend
+
+// Helper: Map Score to Text & Color
+// Assuming Scale 1-5 based on reference image (4 = Mod-High)
+function getSeverityInfo(score) {
+  // Normalize score just in case (if 0-10, divide by 2)
+  // But taking prompt literally, let's assume raw values match image (1,2,3,4)
+  let label = "Low";
+  let color = "#388e3c"; // Green
+  let percent = (score / 10) * 100; // Assuming 5 is max for visual circle
+
+  if (score >= 7) {
+    label = "Moderate-High";
+    color = "#d32f2f"; // Red
+  } else if (score >= 4) {
+    label = "Moderate";
+    color = "#f57c00"; // Orange
+  } else if (score >= 3) {
+    label = "Low-Moderate";
+    color = "#fbc02d"; // Yellow
+  } else {
+    label = "Low";
+    color = "#388e3c"; // Green
+  }
+  
+  return { label, color, percent };
+}
 
 fileInput.onchange = e => {
   const file = e.target.files[0];
@@ -86,28 +377,227 @@ fileInput.onchange = e => {
 
 async function uploadImage() {
   const file = document.getElementById("fileInput").files[0];
+  const errorText = document.getElementById("errorText");
+  const loadingText = document.getElementById("loadingText");
+  const resultContainer = document.getElementById("resultContainer");
+
+  errorText.textContent = "";
   if (!file) {
     alert("Please choose an image first!");
     return;
   }
 
-  const output = document.getElementById("output");
-  output.textContent = "Analyzing image... please wait ⏳";
-  output.classList.add("loading");
+  loadingText.hidden = false;
+  resultContainer.style.display = "none";
 
   const formData = new FormData();
   formData.append("file", file);
 
   try {
     const res = await fetch(backendURL, { method: "POST", body: formData });
-    const data = await res.json();
-    output.classList.remove("loading");
-    output.textContent = JSON.stringify(data, null, 2);
+    const json = await res.json();
+    loadingText.hidden = true;
+    
+    if(json.data) {
+      renderReport(json.data);
+    } else {
+      errorText.textContent = "Invalid data received.";
+    }
+
   } catch (err) {
-    output.textContent = "Error: " + err.message;
-    output.classList.remove("loading");
+    loadingText.hidden = true;
+    errorText.textContent = "Error: " + err.message;
   }
 }
+
+// function renderReport(data) {
+//   const container = document.getElementById("resultContainer");
+  
+//   // 1. Lifestyle AI
+//   document.getElementById("res-age").textContent = data.perceived_skin_age?.value || "--";
+//   document.getElementById("res-skin-type").textContent = data.skin_type_score?.value || "--";
+
+//   // 2. Top 3 Concerns
+//   const top3Container = document.getElementById("top3-container");
+//   top3Container.innerHTML = ""; // Clear previous
+
+//   const concerns = [
+//     { key: 'primary', data: data.primary_concern, severity: data.primary_concern_severity },
+//     { key: 'secondary', data: data.secondary_concern, severity: data.secondary_concern_severity },
+//     { key: 'tertiary', data: data.tertiary_concern, severity: data.tertiary_concern_severity }
+//   ];
+
+//   concerns.forEach(item => {
+//     if(item.data && item.severity) {
+//       const score = item.severity.value;
+//       const info = getSeverityInfo(score);
+      
+//       const html = `
+//         <div class="concern-card">
+//           <img src="${item.data.url}" class="concern-img" alt="${item.data.value}">
+//           <div class="concern-details">
+//             <div class="score-circle-sm" style="border-color: ${info.color}; color: ${info.color}">
+//               ${score}
+//             </div>
+//             <div class="concern-text">
+//               <div class="concern-name" style="color: ${info.color}">${item.data.value.replace('_', ' ')}</div>
+//               <div class="concern-severity">${info.label}</div>
+//             </div>
+//           </div>
+//         </div>
+//       `;
+//       top3Container.innerHTML += html;
+//     }
+//   });
+
+//   // 3. Metrics Grid
+//   const metricsContainer = document.getElementById("metrics-container");
+//   metricsContainer.innerHTML = "";
+
+//   // List of metrics to look for in the JSON
+//   const metricKeys = [
+//     "texture", "elasticity", "firmness", "wrinkles", "spots", 
+//     "redness", "uneven_skintone", "dark_circles", "acne", "pores", "dehydration", "oiliness"
+//   ];
+
+//   metricKeys.forEach(key => {
+//     if(data[key]) {
+//       const val = data[key].value;
+//       const info = getSeverityInfo(val);
+      
+//       // CSS Conic Gradient for progress bar
+//       const gradientStyle = `background: conic-gradient(${info.color} 0% ${info.percent}%, #eee ${info.percent}% 100%)`;
+
+//       const html = `
+//         <div class="metric-card">
+//           <div class="metric-severity">${info.label}</div>
+//           <div class="progress-circle" style="${gradientStyle}">
+//              <div class="progress-value">${val}</div>
+//           </div>
+//           <div class="metric-label">${key.replace('_', ' ')}</div>
+//         </div>
+//       `;
+//       metricsContainer.innerHTML += html;
+//     }
+//   });
+  
+//   // Handle Skin Category (special case if usually just text)
+//   // Assuming oiliness maps to Skin Category as per reference image showing "Oily"
+//   if(data.skin_type) {
+//       const html = `
+//         <div class="metric-card">
+//           <div class="metric-severity">Skin Category</div>
+//           <div class="progress-circle" style="background: white; border: 2px solid #eee;">
+//              <i class="fas fa-tint" style="font-size: 20px; color: ${getSeverityInfo(4).color}"></i>
+//           </div>
+//           <div class="metric-label">${data.skin_type.value}</div>
+//         </div>
+//       `;
+//       metricsContainer.innerHTML += html;
+//   }
+
+//   // Show Result
+//   container.style.display = "block";
+//   // Scroll to result
+//   container.scrollIntoView({ behavior: 'smooth' });
+// }
+
+function renderReport(data) {
+  const container = document.getElementById("resultContainer");
+  
+  // 1. Lifestyle AI
+  document.getElementById("res-age").textContent = data.perceived_skin_age?.value || "--";
+  document.getElementById("res-skin-type").textContent = data.skin_type_score?.value || "--";
+
+  // 2. Top 3 Concerns
+  const top3Container = document.getElementById("top3-container");
+  top3Container.innerHTML = ""; // Clear previous
+
+  const concerns = [
+    { key: 'primary', data: data.primary_concern, severity: data.primary_concern_severity },
+    { key: 'secondary', data: data.secondary_concern, severity: data.secondary_concern_severity },
+    { key: 'tertiary', data: data.tertiary_concern, severity: data.tertiary_concern_severity }
+  ];
+
+  concerns.forEach(item => {
+    if(item.data && item.severity) {
+      const score = item.severity.value;
+      const info = getSeverityInfo(score); // Uses the same severity mapping
+      
+      // CSS Conic Gradient for progress bar - now applied to top 3 concerns
+      const gradientStyle = `background: conic-gradient(${info.color} 0% ${info.percent}%, #eee ${info.percent}% 100%)`;
+
+      const html = `
+        <div class="concern-card">
+          <img src="${item.data.url}" class="concern-img" alt="${item.data.value}">
+          <div class="concern-details">
+            <div class="progress-circle" style="width: 60px; height: 60px; border: none; box-shadow: 0 2px 5px rgba(0,0,0,0.2); ${gradientStyle}">
+                <div class="progress-value" style="font-size: 18px; color: ${info.color};">${score}</div>
+            </div>
+            <div class="concern-text" style="margin-top: 0;">
+              <div class="concern-name" style="color: ${info.color}">${item.data.value.replace('_', ' ')}</div>
+              <div class="concern-severity">${info.label}</div>
+            </div>
+          </div>
+        </div>
+      `;
+      top3Container.innerHTML += html;
+    }
+  });
+
+  // 3. Metrics Grid
+  const metricsContainer = document.getElementById("metrics-container");
+  metricsContainer.innerHTML = "";
+
+  // List of metrics to look for in the JSON
+  const metricKeys = [
+    "texture", "elasticity", "firmness", "wrinkles", "spots", 
+    "redness", "uneven_skintone", "dark_circles", "acne", "pores", "dehydration", "oiliness"
+  ];
+
+  metricKeys.forEach(key => {
+    if(data[key]) {
+      const val = data[key].value;
+      const info = getSeverityInfo(val);
+      
+      // CSS Conic Gradient for progress bar
+      const gradientStyle = `background: conic-gradient(${info.color} 0% ${info.percent}%, #eee ${info.percent}% 100%)`;
+
+      const html = `
+        <div class="metric-card">
+          <div class="metric-severity">${info.label}</div>
+          <div class="progress-circle" style="${gradientStyle}">
+             <div class="progress-value">${val}</div>
+          </div>
+          <div class="metric-label">${key.replace('_', ' ')}</div>
+        </div>
+      `;
+      metricsContainer.innerHTML += html;
+    }
+  });
+  
+  // Handle Skin Category (special case if usually just text)
+  // Assuming oiliness maps to Skin Category as per reference image showing "Oily"
+  if(data.skin_type) { // Using data.skin_type as the primary source for the category text
+      const html = `
+        <div class="metric-card">
+          <div class="metric-severity">Skin Category</div>
+          <div class="progress-circle" style="background: white; border: 2px solid #eee;">
+             <i class="fas fa-tint" style="font-size: 20px; color: ${getSeverityInfo(data.oiliness?.value || 0).color}"></i>
+          </div>
+          <div class="metric-label">${data.skin_type.value}</div>
+        </div>
+      `;
+      metricsContainer.innerHTML += html;
+  }
+
+
+  // Show Result
+  container.style.display = "block";
+  // Scroll to result
+  container.scrollIntoView({ behavior: 'smooth' });
+}
+
 </script>
 </body>
 </html>
