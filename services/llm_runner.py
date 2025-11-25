@@ -10,6 +10,7 @@ No merging or synthesis happens here.
 import asyncio
 from services.openai_client import analyze_with_openai
 from services.gemini_client import analyze_with_gemini
+from services.cohere_client import analyze_with_cohere
 from core.prompts import GPT_PROMPT, GEMINI_PROMPT
 
 
@@ -20,5 +21,6 @@ async def run_multi_llm_analysis(img_b64: str, mime_type: str):
 
     gpt_task = analyze_with_openai(img_b64, mime_type, GPT_PROMPT)
     gem_task = analyze_with_gemini(img_b64, mime_type, GEMINI_PROMPT)
+    # gem_task = analyze_with_cohere(img_b64, mime_type, GEMINI_PROMPT)
 
     return await asyncio.gather(gpt_task, gem_task)

@@ -269,17 +269,93 @@ class SkinAnalysisSynthesizer:
 # ------------------------------------------------------------
 # SINGLE MODEL FALLBACK
 # ------------------------------------------------------------
+# def finalize_from_single_model(model: dict) -> dict:
+#     """
+#     Used when only GPT or only Gemini responded.
+#     Removes duplicates from metrics and applies Option-B ordering.
+#     """
+#     m = dict(model)
+
+#     chosen = {
+#         m.get("primary_concern", ""),
+#         m.get("secondary_concern", ""),
+#         m.get("tertiary_concern", "")
+#     }
+
+#     metrics = [
+#         "oiliness", "pores", "dehydration", "texture", "elasticity",
+#         "firmness", "wrinkles", "spots", "redness", "uneven_skintone",
+#         "dark_circles", "acne"
+#     ]
+
+#     out = {}
+
+#     # Order Part 1
+#     for k in ["perceived_skin_age", "skin_type", "skin_type_score"]:
+#         if k in m:
+#             out[k] = m[k]
+
+#     # Order Part 2
+#     for k in [
+#         "primary_concern", "primary_concern_severity",
+#         "secondary_concern", "secondary_concern_severity",
+#         "tertiary_concern", "tertiary_concern_severity",
+#     ]:
+#         if k in m:
+#             out[k] = m[k]
+
+#     # Remaining metrics
+#     for k in metrics:
+#         if k in chosen:
+#             continue
+#         if k in m:
+#             out[k] = m[k]
+
+#     print("Finalized single model output:", out)
+#     return {"data": out}
+
+
 def finalize_from_single_model(model: dict) -> dict:
     """
-    Used when only GPT or only Gemini responded.
-    Removes duplicates from metrics and applies Option-B ordering.
+    Convert raw model output into structured format:
+    {"key": {"value": X, "url": "..."}}
+    with ordering.
     """
-    m = dict(model)
+
+    # Default URL for all fields (change if needed)
+    DEFAULT_URL = "https://cdn.pixabay.com/photo/2021/06/11/12/26/woman-6328478_960_720.jpg"
+
+    # Which keys need URLs?
+    keys_with_url = {
+        "primary_concern",
+        "secondary_concern",
+        "tertiary_concern",
+        "oiliness",
+        "pores",
+        "dehydration",
+        "texture",
+        "elasticity",
+        "firmness",
+        "wrinkles",
+        "spots",
+        "redness",
+        "uneven_skintone",
+        "dark_circles",
+        "acne"
+    }
+
+    # Wrap raw values into desired format
+    def wrap(key, value):
+        if key in keys_with_url:
+            return {"value": value, "url": DEFAULT_URL}
+        return {"value": value}
+
+    m = {k: wrap(k, v) for k, v in model.items()}
 
     chosen = {
-        m.get("primary_concern", ""),
-        m.get("secondary_concern", ""),
-        m.get("tertiary_concern", "")
+        model.get("primary_concern", ""),
+        model.get("secondary_concern", ""),
+        model.get("tertiary_concern", "")
     }
 
     metrics = [

@@ -287,6 +287,61 @@
   .color-mod { color: #f57c00; }
   .color-low { color: #388e3c; }
 
+
+  @media print {
+
+  /* Hide the conic gradient circle */
+  .progress-circle {
+    background: none !important;
+    border: 3px solid #000 !important;
+    position: relative !important;
+    box-shadow: none !important;
+  }
+
+  /* Remove inner white circle (because gradients break) */
+  .progress-circle::before {
+    display: none !important;
+  }
+
+  /* Show value in the center */
+  .progress-value {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    color: #000 !important;
+    font-weight: 700 !important;
+  }
+
+  /* For progress-circle we used in top3 concerns */
+  .concern-card .progress-circle {
+    border: 3px solid #000 !important;
+    background: none !important;
+  }
+
+  /* Force images to print */
+  img {
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  /* Make background colors always appear */
+  * {
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  /* Make red sections print visible */
+  .red-card-container {
+    background: #e53935 !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  .section-tag {
+    background: #e53935 !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -550,31 +605,69 @@ function renderReport(data) {
   metricsContainer.innerHTML = "";
 
   // List of metrics to look for in the JSON
-  const metricKeys = [
-    "texture", "elasticity", "firmness", "wrinkles", "spots", 
-    "redness", "uneven_skintone", "dark_circles", "acne", "pores", "dehydration", "oiliness"
-  ];
+  // const metricKeys = [
+  //   "texture", "elasticity", "firmness", "wrinkles", "spots", 
+  //   "redness", "uneven_skintone", "dark_circles", "acne", "pores", "dehydration", "oiliness"
+  // ];
 
-  metricKeys.forEach(key => {
-    if(data[key]) {
-      const val = data[key].value;
-      const info = getSeverityInfo(val);
+  // metricKeys.forEach(key => {
+  //   if(data[key]) {
+  //     const val = data[key].value;
+  //     const info = getSeverityInfo(val);
       
-      // CSS Conic Gradient for progress bar
-      const gradientStyle = `background: conic-gradient(${info.color} 0% ${info.percent}%, #eee ${info.percent}% 100%)`;
+  //     // CSS Conic Gradient for progress bar
+  //     const gradientStyle = `background: conic-gradient(${info.color} 0% ${info.percent}%, #eee ${info.percent}% 100%)`;
 
-      const html = `
-        <div class="metric-card">
-          <div class="metric-severity">${info.label}</div>
-          <div class="progress-circle" style="${gradientStyle}">
-             <div class="progress-value">${val}</div>
-          </div>
-          <div class="metric-label">${key.replace('_', ' ')}</div>
-        </div>
-      `;
-      metricsContainer.innerHTML += html;
-    }
-  });
+  //     const html = `
+  //       <div class="metric-card">
+  //         <div class="metric-severity">${info.label}</div>
+  //         <div class="progress-circle" style="${gradientStyle}">
+  //            <div class="progress-value">${val}</div>
+  //         </div>
+  //         <div class="metric-label">${key.replace('_', ' ')}</div>
+  //       </div>
+  //     `;
+  //     metricsContainer.innerHTML += html;
+  //   }
+  // });
+
+  const metricKeys = [
+  "texture", "elasticity", "firmness", "wrinkles", "spots",
+  "redness", "uneven_skintone", "dark_circles", "acne",
+  "pores", "dehydration", "oiliness"
+];
+
+// Step 1: Collect all available metric items
+let metricList = metricKeys
+  .filter(key => data[key] && data[key].value !== undefined)
+  .map(key => ({
+    key,
+    value: data[key].value,
+    url: data[key].url
+  }));
+
+// Step 2: Sort by severity descending
+metricList.sort((a, b) => b.value - a.value);
+
+// Step 3: Render in sorted order
+metricList.forEach(item => {
+  const val = item.value;
+  const info = getSeverityInfo(val); // your existing function
+  
+  const gradientStyle = `background: conic-gradient(${info.color} 0% ${info.percent}%, #eee ${info.percent}% 100%)`;
+
+  const html = `
+    <div class="metric-card">
+      <div class="metric-severity">${info.label}</div>
+      <div class="progress-circle" style="${gradientStyle}">
+         <div class="progress-value">${val}</div>
+      </div>
+      <div class="metric-label">${item.key.replace('_', ' ')}</div>
+    </div>
+  `;
+
+  metricsContainer.innerHTML += html;
+});
   
   // Handle Skin Category (special case if usually just text)
   // Assuming oiliness maps to Skin Category as per reference image showing "Oily"

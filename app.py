@@ -37,6 +37,9 @@ async def analyze_skin(file: UploadFile = File(...)):
 
     img_b64, mime_type = await encode_upload_to_base64(file)
     gpt_res, gem_res = await run_multi_llm_analysis(img_b64, mime_type)
+    
+    print("GPT Response:", gpt_res)
+    print("Gemini/Cohere Response:", gem_res)
 
     try:
         gpt_json = json.loads(gpt_res) if gpt_res else {}

@@ -51,7 +51,7 @@ async def analyze_with_gemini(img_b64: str, mime_type: str, prompt: str):
 
             result = await asyncio.to_thread(
                 client.models.generate_content,
-                model="gemini-2.0-flash",
+                model="gemini-2.5-flash",
                 contents=[prompt_part, image_part],
                 config=config,
             )
@@ -65,7 +65,7 @@ async def analyze_with_gemini(img_b64: str, mime_type: str, prompt: str):
     # =========================
     # 🌐 REST API MODE (Fallback)
     # =========================
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={GOOGLE_API_KEY}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GOOGLE_API_KEY}"
     headers = {"Content-Type": "application/json"}
 
     payload = {
